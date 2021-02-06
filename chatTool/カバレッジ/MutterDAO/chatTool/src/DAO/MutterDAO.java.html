@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ja"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>MutterDAO.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">MutterDAOTest (1) (2021/02/03 18:42:30)</a> &gt; <a href="../../index.html" class="el_group">chatTool</a> &gt; <a href="../index.html" class="el_bundle">src</a> &gt; <a href="index.source.html" class="el_package">DAO</a> &gt; <span class="el_source">MutterDAO.java</span></div><h1>MutterDAO.java</h1><pre class="source lang-java linenums">package DAO;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
+
+import model.Mutter;
+import model.UserAccount;
+
+public class MutterDAO {
+	private final String JDBC_URL;
+	private final String DB_USER;
+	private final String DB_PASS;
+
+<span class="fc" id="L18">	public MutterDAO(String JDBC_URL, String DB_USER, String DB_PASS) {</span>
+<span class="fc" id="L19">		this.JDBC_URL = JDBC_URL;</span>
+<span class="fc" id="L20">		this.DB_USER = DB_USER;</span>
+<span class="fc" id="L21">		this.DB_PASS = DB_PASS;</span>
+<span class="fc" id="L22">	}</span>
+
+	public int create(Mutter mutter) {
+		int determine;
+<span class="fc" id="L26">		try (Connection conn = DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASS)) {</span>
+			//INSERT文を準備
+<span class="fc" id="L28">			String sql = &quot;INSERT INTO MUTTER(TEXT,MUTTERDATE,USERID) VALUES(?,?,?)&quot;;</span>
+<span class="fc" id="L29">			PreparedStatement pStmt = conn.prepareStatement(sql);</span>
+<span class="fc" id="L30">			pStmt.setString(1, mutter.getText());</span>
+<span class="fc" id="L31">			pStmt.setString(2, mutter.getDateNow());</span>
+<span class="fc" id="L32">			pStmt.setInt(3, mutter.getUserId());</span>
+
+			//INSERT文の実行しテーブルに追加
+<span class="fc" id="L35">			determine = pStmt.executeUpdate();</span>
+
+<span class="fc" id="L37">		} catch (SQLException e) {</span>
+<span class="fc" id="L38">			e.printStackTrace();</span>
+<span class="fc" id="L39">			determine = 0;</span>
+		}
+<span class="fc" id="L41">		return determine;</span>
+
+	}
+
+	public List&lt;Mutter&gt; findMutter(List&lt;Mutter&gt; mutterList, UserAccount loginUser) {
+
+<span class="fc" id="L47">		try (Connection conn = DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASS)) {</span>
+			//SELECT文準備 ユーザーIDでそのIDで投稿したデータを取ってくる
+<span class="fc" id="L49">			String sql = &quot;SELECT MUTTER.ID,TEXT,MUTTERDATE,USERID FROM MUTTER JOIN USER ON  MUTTER.USERID = USER.ID WHERE USER.ID = ?&quot;;</span>
+<span class="fc" id="L50">			PreparedStatement pStmt = conn.prepareStatement(sql);</span>
+<span class="fc" id="L51">			pStmt.setInt(1, loginUser.getId());</span>
+
+<span class="fc" id="L53">			ResultSet rs = pStmt.executeQuery();//SQL実行</span>
+
+<span class="fc bfc" id="L55" title="All 2 branches covered.">			while (rs.next()) {</span>
+<span class="fc" id="L56">				int id = rs.getInt(&quot;ID&quot;);</span>
+<span class="fc" id="L57">				String text = rs.getString(&quot;TEXT&quot;);</span>
+<span class="fc" id="L58">				String mutterDate = rs.getString(&quot;MUTTERDATE&quot;);</span>
+<span class="fc" id="L59">				int userId = rs.getInt(&quot;USERID&quot;);</span>
+<span class="fc" id="L60">				Mutter mutter = new Mutter(id, text, mutterDate, userId);</span>
+<span class="fc" id="L61">				mutterList.add(mutter);//つぶやきを追加</span>
+			}
+
+<span class="fc" id="L64">		} catch (SQLException e) {</span>
+<span class="fc" id="L65">			e.printStackTrace();</span>
+<span class="fc" id="L66">			return null;</span>
+		}
+<span class="fc" id="L68">		return mutterList;</span>
+	}
+
+	public Mutter findReply(Mutter mutter, int replyId) {
+
+<span class="fc" id="L73">		try (Connection conn = DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASS)) {</span>
+
+			//SELECT文
+<span class="fc" id="L76">			String sql = &quot;SELECT REPLY FROM REPLY WHERE ID = ?&quot;;</span>
+<span class="fc" id="L77">			PreparedStatement pStmt = conn.prepareStatement(sql);</span>
+<span class="fc" id="L78">			pStmt.setInt(1, replyId);</span>
+
+			//SELECT文を実行しREPLYを取得
+<span class="fc" id="L81">			ResultSet rs = pStmt.executeQuery();</span>
+<span class="fc bfc" id="L82" title="All 2 branches covered.">			if (rs.next()) {//取得したREPLYをmutterに入れる</span>
+
+<span class="fc" id="L84">				mutter.setReply(rs.getString(&quot;REPLY&quot;));</span>
+			}
+<span class="fc" id="L86">		} catch (SQLException e) {</span>
+<span class="fc" id="L87">			e.printStackTrace();</span>
+<span class="fc" id="L88">			return null;</span>
+		}
+<span class="fc" id="L90">		return mutter;</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span>MutterDAOTest (1) (2021/02/03 18:42:30)</div></body></html>

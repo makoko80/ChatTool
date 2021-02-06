@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ja"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>MutterListLogicTest.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">MutterListLogicTest (2021/02/04 17:45:17)</a> &gt; <a href="../../index.html" class="el_group">chatTool</a> &gt; <a href="../index.html" class="el_bundle">src</a> &gt; <a href="index.source.html" class="el_package">testCode</a> &gt; <span class="el_source">MutterListLogicTest.java</span></div><h1>MutterListLogicTest.java</h1><pre class="source lang-java linenums">package testCode;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.junit.jupiter.api.Test;
+
+import model.Mutter;
+import model.MutterListLogic;
+import model.UserAccount;
+
+<span class="fc" id="L12">class MutterListLogicTest {</span>
+
+	@Test
+	void getReplytest1() {//REPLY取得成功時
+<span class="fc" id="L16">		Mutter mutter = new Mutter(1, &quot;おやすみなさい&quot;, &quot;2222&quot;, 1);</span>
+<span class="fc" id="L17">		Mutter mutter2 = new Mutter(1, &quot;わかりません&quot;, &quot;2222&quot;, 1);</span>
+<span class="fc" id="L18">		MutterListLogic mutterListLogic = new MutterListLogic();</span>
+
+<span class="fc" id="L20">		mutter = mutterListLogic.getReply(mutter);</span>
+<span class="fc" id="L21">		mutter2 = mutterListLogic.getReply(mutter2);</span>
+<span class="fc" id="L22">		System.out.println(mutter.getReply());//期待値「おやすみなさい」</span>
+<span class="fc" id="L23">		System.out.println(mutter2.getReply());//期待値「すみませんわかりません」</span>
+
+<span class="fc" id="L25">	}</span>
+
+	@Test
+	void getMutterTest() {
+<span class="fc" id="L29">		UserAccount loginUser = new UserAccount(51, &quot;ひろし&quot;, &quot;123&quot;);</span>
+<span class="fc" id="L30">		UserAccount loginUser2 = new UserAccount(1, &quot;柏木くん&quot;, &quot;1234&quot;);</span>
+<span class="fc" id="L31">		List&lt;Mutter&gt; mutterList = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L32">		MutterListLogic mutterListLogic = new MutterListLogic();</span>
+
+<span class="fc" id="L34">		mutterList = mutterListLogic.getMutter(loginUser);</span>
+<span class="fc bfc" id="L35" title="All 2 branches covered.">		for (Mutter mutter : mutterList) {</span>
+<span class="fc" id="L36">			System.out.println(mutter.getText());//期待値「おらごくう」</span>
+<span class="fc" id="L37">			System.out.println(mutter.getReply());//期待値「すみませんわかりません」</span>
+		}
+<span class="fc" id="L39">		mutterList = mutterListLogic.getMutter(loginUser2);</span>
+<span class="fc bfc" id="L40" title="All 2 branches covered.">		for (Mutter mutter : mutterList) {</span>
+<span class="fc" id="L41">			System.out.println(mutter.getText());//期待値「初めまして」「こんにちわ」×2</span>
+<span class="fc" id="L42">			System.out.println(mutter.getReply());//期待値「初めまして」×3</span>
+		}
+<span class="fc" id="L44">	}</span>
+
+	@Test
+	void postMutterTest1() {//登録成功時
+<span class="fc" id="L48">		Mutter mutter = new Mutter(1, &quot;test&quot;, &quot;2021/2/4&quot;, 51, &quot;すみませんわかりません&quot;, 100);</span>
+<span class="fc" id="L49">		MutterListLogic mutterListLogic = new MutterListLogic();</span>
+<span class="fc" id="L50">		boolean result = mutterListLogic.postMutter(mutter);</span>
+<span class="pc bpc" id="L51" title="1 of 2 branches missed.">		if (result) {</span>
+<span class="fc" id="L52">			System.out.println(&quot;登録成功&quot;);//期待値</span>
+<span class="fc" id="L53">		} else {</span>
+<span class="nc" id="L54">			System.out.println(&quot;登録失敗&quot;);</span>
+		}
+<span class="fc" id="L56">	}</span>
+
+	@Test
+	void postMutterTest2() {//登録失敗時
+<span class="fc" id="L60">		Mutter mutter = new Mutter(0, &quot;test&quot;, &quot;2021/2/4&quot;, 51, &quot;すみませんわかりません&quot;, 100);</span>
+<span class="fc" id="L61">		MutterListLogic mutterListLogic = new MutterListLogic();</span>
+<span class="fc" id="L62">		boolean result = mutterListLogic.postMutter(mutter);</span>
+<span class="pc bpc" id="L63" title="1 of 2 branches missed.">		if (result) {</span>
+<span class="nc" id="L64">			System.out.println(&quot;登録成功&quot;);</span>
+<span class="nc" id="L65">		} else {</span>
+<span class="fc" id="L66">			System.out.println(&quot;登録失敗&quot;);//期待値</span>
+		}
+<span class="fc" id="L68">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span>MutterListLogicTest (2021/02/04 17:45:17)</div></body></html>
