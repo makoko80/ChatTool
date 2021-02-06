@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ja"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>LoginLogicTest.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">LegisterLogicTest (2021/02/02 17:07:28)</a> &gt; <a href="../../index.html" class="el_group">chatTool</a> &gt; <a href="../index.html" class="el_bundle">src</a> &gt; <a href="index.source.html" class="el_package">testCode</a> &gt; <span class="el_source">LoginLogicTest.java</span></div><h1>LoginLogicTest.java</h1><pre class="source lang-java linenums">package testCode;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.junit.jupiter.api.Test;
+
+import model.FormParameter;
+import model.LoginLogic;
+
+<span class="nc" id="L10">class LoginLogicTest {</span>
+
+	@Test
+	void test1() {//ログイン成功時テスト
+<span class="nc" id="L14">		FormParameter fp = new FormParameter(&quot;桜木くん&quot;,&quot;1234&quot;);</span>
+<span class="nc" id="L15">		LoginLogic loginLogic = new LoginLogic();</span>
+<span class="nc" id="L16">		HttpServletRequest request = null;</span>
+<span class="nc" id="L17">		int determine = loginLogic.execute(fp,request);</span>
+
+<span class="nc bnc" id="L19" title="All 4 branches missed.">		switch(determine) {</span>
+		case 1:
+<span class="nc" id="L21">			System.out.println(&quot;ログイン成功&quot;);</span>
+<span class="nc" id="L22">			break;</span>
+		case 2:
+<span class="nc" id="L24">			System.out.println(&quot;パスワードが一致しません&quot;);</span>
+<span class="nc" id="L25">			break;</span>
+		case 3:
+<span class="nc" id="L27">			System.out.println(&quot;データが存在しません&quot;);</span>
+		}
+<span class="nc" id="L29">	}</span>
+	@Test
+	void test2() {//パスワードミスマッチテスト
+<span class="nc" id="L32">		FormParameter fp = new FormParameter(&quot;桜木くん&quot;,&quot;123&quot;);</span>
+<span class="nc" id="L33">		LoginLogic loginLogic = new LoginLogic();</span>
+<span class="nc" id="L34">		HttpServletRequest request = null;</span>
+<span class="nc" id="L35">		int determine = loginLogic.execute(fp,request);</span>
+
+<span class="nc bnc" id="L37" title="All 4 branches missed.">		switch(determine) {</span>
+		case 1:
+<span class="nc" id="L39">			System.out.println(&quot;ログイン成功&quot;);</span>
+<span class="nc" id="L40">			break;</span>
+		case 2:
+<span class="nc" id="L42">			System.out.println(&quot;パスワードが一致しません&quot;);</span>
+<span class="nc" id="L43">			break;</span>
+		case 3:
+<span class="nc" id="L45">			System.out.println(&quot;データが存在しません&quot;);</span>
+		}
+<span class="nc" id="L47">	}</span>
+	@Test
+	void test3() {//データベースに登録されていない場合のテスト
+<span class="nc" id="L50">		FormParameter fp = new FormParameter(&quot;桜くん&quot;,&quot;1234&quot;);</span>
+<span class="nc" id="L51">		LoginLogic loginLogic = new LoginLogic();</span>
+<span class="nc" id="L52">		HttpServletRequest request = null;</span>
+<span class="nc" id="L53">		int determine = loginLogic.execute(fp,request);</span>
+
+<span class="nc bnc" id="L55" title="All 4 branches missed.">		switch(determine) {</span>
+		case 1:
+<span class="nc" id="L57">			System.out.println(&quot;ログイン成功&quot;);</span>
+<span class="nc" id="L58">			break;</span>
+		case 2:
+<span class="nc" id="L60">			System.out.println(&quot;パスワードが一致しません&quot;);</span>
+<span class="nc" id="L61">			break;</span>
+		case 3:
+<span class="nc" id="L63">			System.out.println(&quot;データが存在しません&quot;);</span>
+		}
+<span class="nc" id="L65">	}</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span>LegisterLogicTest (2021/02/02 17:07:28)</div></body></html>
